@@ -13,8 +13,13 @@
 7. `orders.sql`
 8. `order_items.sql`
 9. `reviews.sql`
+10. `wishlist.sql` — избранное (связь пользователь ↔ пластинка)
 
 В pgAdmin: Query Tool — выполнить файлы по очереди **или** объединить в один скрипт в этом порядке.
+
+### Уже есть база без `wishlist`
+
+Выполни один раз файл `migrations/001_add_wishlist.sql` на нужной БД.
 
 ## Полный скрипт одной командой (bash)
 
@@ -30,5 +35,6 @@ cat schema/public/Tables/00_extensions.sql \
     schema/public/Tables/orders.sql \
     schema/public/Tables/order_items.sql \
     schema/public/Tables/reviews.sql \
+    schema/public/Tables/wishlist.sql \
   | psql -h localhost -U postgres -d MusicShopDB
 ```
