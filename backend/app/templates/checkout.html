@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+  <h1>Оформление заказа</h1>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  {% if not items or items|length == 0 %}
+    <p>Корзина пуста. Оформлять нечего.</p>
+    <p><a href="/search">Перейти к поиску</a></p>
+  {% else %}
+    <div class="card">
+      <p class="muted">Товаров: <b>{{ cart_count }}</b>, сумма: <b>{{ total }}</b></p>
+    </div>
+
+    <form method="post" action="/checkout">
+      <div>
+        <label>Адрес доставки:</label><br>
+        <textarea name="delivery_address" rows="3" cols="40" required></textarea>
+      </div>
+      <div>
+        <label>Способ оплаты:</label><br>
+        <select name="payment_method" required>
+          <option value="card">Оплата картой</option>
+          <option value="cash">Наличными при получении</option>
+        </select>
+      </div>
+      <button type="submit">Оформить заказ</button>
+    </form>
+  {% endif %}
+{% endblock %}
+

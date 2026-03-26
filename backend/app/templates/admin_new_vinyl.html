@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить пластинку{% endblock %}
+
+{% block content %}
+  <h1>Добавить пластинку (админ)</h1>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  <form method="post" action="/admin/vinyls/new">
+    <div>
+      <label>Название:</label><br>
+      <input name="title" required>
+    </div>
+    <div>
+      <label>Автор (исполнитель):</label><br>
+      <input name="artist_name" required>
+    </div>
+    <div>
+      <label>Жанры (через запятую):</label><br>
+      <input name="genres" placeholder="Rock, Jazz">
+    </div>
+    <div>
+      <label>Цена:</label><br>
+      <input type="number" step="0.01" name="price" required>
+    </div>
+    <div>
+      <label>Описание:</label><br>
+      <textarea name="description" rows="3" cols="40"></textarea>
+    </div>
+    <button type="submit">Добавить</button>
+  </form>
+{% endblock %}
+

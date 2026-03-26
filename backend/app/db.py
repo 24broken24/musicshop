@@ -25,7 +25,7 @@ def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
     with get_conn() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(
-                "SELECT id, email, password_hash FROM users WHERE email = %s",
+                "SELECT id, email, password_hash, role FROM users WHERE email = %s",
                 (email,),
             )
             return cur.fetchone()
@@ -112,6 +112,102 @@ def get_cart_items(user_id: int) -> List[Dict[str, Any]]:
                 (user_id,),
             )
             return list(cur.fetchall())
+
+def clear_cart(user_id: int) -> None:
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                DELETE FROM cart_items
+                WHERE cart_id IN (SELECT id FROM carts WHERE user_id = %s)
+                """,
+                (user_id,),
+            )
+
+
+def create_order_from_cart(user_id: int, delivery_address: str, payment_method: str) -> int:
+    """
+    Creates an order from current cart items and clears the cart.
+    Returns created order_id.
+    """
+    items = get_cart_items(user_id)
+    total = sum(float(i["line_total"]) for i in items) if items else 0.0
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO orders (user_id, delivery_address, payment_method, status, total)
+                VALUES (%s, %s, %s, 'NEW', %s)
+                RETURNING id
+                """,
+                (user_id, delivery_address, payment_method, total),
+            )
+            order_id = cur.fetchone()[0]
+            for i in items:
+                cur.execute(
+                    """
+                    INSERT INTO order_items (order_id, vinyl_id, quantity, unit_price)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (order_id, i["vinyl_id"], i["quantity"], i["price"]),
+                )
+            cur.execute(
+                "DELETE FROM cart_items WHERE cart_id IN (SELECT id FROM carts WHERE user_id = %s)",
+                (user_id,),
+            )
+            return order_id
+
+
+def _get_or_create_artist_id(cur, name: str) -> int:
+    cur.execute("SELECT id FROM artists WHERE name = %s", (name,))
+    row = cur.fetchone()
+    if row:
+        return row[0]
+    cur.execute("INSERT INTO artists (name) VALUES (%s) RETURNING id", (name,))
+    return cur.fetchone()[0]
+
+
+def _get_or_create_genre_id(cur, name: str) -> int:
+    cur.execute("SELECT id FROM genres WHERE name = %s", (name,))
+    row = cur.fetchone()
+    if row:
+        return row[0]
+    cur.execute("INSERT INTO genres (name) VALUES (%s) RETURNING id", (name,))
+    return cur.fetchone()[0]
+
+
+def create_vinyl(
+    title: str,
+    artist_name: str,
+    genre_names: List[str],
+    price: float,
+    description: Optional[str],
+) -> int:
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            artist_id = _get_or_create_artist_id(cur, artist_name)
+            cur.execute(
+                """
+                INSERT INTO vinyls (title, artist_id, price, description, stock_quantity)
+                VALUES (%s, %s, %s, %s, 0)
+                RETURNING id
+                """,
+                (title, artist_id, price, description),
+            )
+            vinyl_id = cur.fetchone()[0]
+            for g in genre_names:
+                if not g:
+                    continue
+                genre_id = _get_or_create_genre_id(cur, g)
+                cur.execute(
+                    """
+                    INSERT INTO vinyl_genres (vinyl_id, genre_id)
+                    VALUES (%s, %s)
+                    ON CONFLICT DO NOTHING
+                    """,
+                    (vinyl_id, genre_id),
+                )
+            return vinyl_id
 
 
 def search_vinyls(

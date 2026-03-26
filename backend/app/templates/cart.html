@@ -30,6 +30,10 @@
     </div>
   {% endif %}
 
+  {% if items and items|length > 0 %}
+    <p><a href="/checkout">Перейти к оформлению заказа</a></p>
+  {% endif %}
+
   <p><a href="/search">Вернуться к поиску</a></p>
 {% endblock %}
 

@@ -14,12 +14,15 @@ from starlette.middleware.sessions import SessionMiddleware
 from .db import (
     add_to_cart,
     create_user,
+    create_order_from_cart,
+    create_vinyl,
     get_cart_count,
     get_cart_items,
     get_user_by_email,
     get_vinyl_detail,
     search_vinyls,
 )
+from .utils import calc_cart_total
 
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -56,9 +59,19 @@ def _check_password(password: str, password_hash: str) -> bool:
 def _get_user_from_session(request: Request) -> Optional[dict]:
     user_id = request.session.get("user_id")
     email = request.session.get("email")
+    role = request.session.get("role")
     if not user_id or not email:
         return None
-    return {"id": user_id, "email": email}
+    return {"id": user_id, "email": email, "role": role}
+
+
+def _require_admin(request: Request) -> Optional[RedirectResponse]:
+    user = _get_user_from_session(request)
+    if not user:
+        return RedirectResponse(url="/login", status_code=303)
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Доступ запрещен")
+    return None
 
 
 def _cart_count_context(request: Request) -> int:
@@ -178,6 +191,7 @@ def login_action(
 
     request.session["user_id"] = user["id"]
     request.session["email"] = user["email"]
+    request.session["role"] = user.get("role")
     return RedirectResponse(url="/search", status_code=303)
 
 
@@ -253,9 +267,121 @@ def cart_page(request: Request):
         return RedirectResponse(url="/login", status_code=303)
     items = get_cart_items(user["id"])
     cart_count = get_cart_count(user["id"])
-    total = sum(float(i["line_total"]) for i in items) if items else 0.0
+    total = calc_cart_total(items)
     return templates.TemplateResponse(
         "cart.html",
         {"request": request, "cart_count": cart_count, "user": user, "items": items, "total": total},
     )
+
+
+@app.get("/checkout", response_class=HTMLResponse)
+def checkout_page(request: Request):
+    user = _get_user_from_session(request)
+    if not user:
+        return RedirectResponse(url="/login", status_code=303)
+    items = get_cart_items(user["id"])
+    cart_count = get_cart_count(user["id"])
+    total = calc_cart_total(items)
+    return templates.TemplateResponse(
+        "checkout.html",
+        {
+            "request": request,
+            "cart_count": cart_count,
+            "user": user,
+            "items": items,
+            "total": total,
+            "error": None,
+        },
+    )
+
+
+@app.post("/checkout")
+def checkout_action(
+    request: Request,
+    delivery_address: str = Form(...),
+    payment_method: str = Form(...),
+):
+    user = _get_user_from_session(request)
+    if not user:
+        return RedirectResponse(url="/login", status_code=303)
+    delivery_address = (delivery_address or "").strip()
+    if payment_method not in ("card", "cash"):
+        raise HTTPException(status_code=400, detail="Некорректный способ оплаты")
+    if not delivery_address:
+        return templates.TemplateResponse(
+            "checkout.html",
+            {
+                "request": request,
+                "cart_count": get_cart_count(user["id"]),
+                "user": user,
+                "items": get_cart_items(user["id"]),
+                "total": 0,
+                "error": "Введите адрес доставки.",
+            },
+            status_code=400,
+        )
+    order_id = create_order_from_cart(user["id"], delivery_address, payment_method)
+    return RedirectResponse(url=f"/orders/{order_id}", status_code=303)
+
+
+@app.get("/orders/{order_id}", response_class=HTMLResponse)
+def order_created_page(request: Request, order_id: int):
+    user = _get_user_from_session(request)
+    if not user:
+        return RedirectResponse(url="/login", status_code=303)
+    return templates.TemplateResponse(
+        "order_created.html",
+        {"request": request, "cart_count": _cart_count_context(request), "user": user, "order_id": order_id},
+    )
+
+
+@app.get("/admin/vinyls/new", response_class=HTMLResponse)
+def admin_new_vinyl_page(request: Request):
+    redirect = _require_admin(request)
+    if redirect:
+        return redirect
+    return templates.TemplateResponse(
+        "admin_new_vinyl.html",
+        {"request": request, "cart_count": _cart_count_context(request), "user": _get_user_from_session(request), "error": None},
+    )
+
+
+@app.post("/admin/vinyls/new", response_class=HTMLResponse)
+def admin_new_vinyl_action(
+    request: Request,
+    title: str = Form(...),
+    artist_name: str = Form(...),
+    genres: str = Form(""),
+    price: str = Form(...),
+    description: str = Form(""),
+):
+    redirect = _require_admin(request)
+    if redirect:
+        return redirect
+    user = _get_user_from_session(request)
+
+    title = (title or "").strip()
+    artist_name = (artist_name or "").strip()
+    description = (description or "").strip() or None
+    genre_list = [g.strip() for g in (genres or "").split(",") if g.strip()]
+
+    try:
+        price_f = float(price)
+    except ValueError:
+        price_f = -1.0
+
+    if not title or not artist_name or price_f < 0:
+        return templates.TemplateResponse(
+            "admin_new_vinyl.html",
+            {
+                "request": request,
+                "cart_count": _cart_count_context(request),
+                "user": user,
+                "error": "Заполните название, автора и корректную цену.",
+            },
+            status_code=400,
+        )
+
+    vinyl_id = create_vinyl(title, artist_name, genre_list, price_f, description)
+    return RedirectResponse(url=f"/vinyl/{vinyl_id}", status_code=303)
 
