@@ -1,0 +1,2 @@
+"""MusicShop backend package."""
+
