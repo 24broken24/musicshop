@@ -3,37 +3,58 @@
 {% block title %}Корзина{% endblock %}
 
 {% block content %}
-  <h1>Корзина</h1>
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight">Корзина</h1>
+      <p class="mt-1 text-sm text-slate-500">Проверьте состав заказа перед оформлением.</p>
+    </div>
+    <div class="text-sm text-slate-500">
+      Товаров: <span class="font-medium text-slate-900">{{ cart_count }}</span>
+    </div>
+  </div>
 
   {% if not items or items|length == 0 %}
-    <p>Корзина пустая.</p>
+    <div class="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
+      <div class="text-lg font-medium">Корзина пустая</div>
+      <div class="mt-1 text-sm">Перейдите к поиску и добавьте пластинки.</div>
+      <div class="mt-4">
+        <a href="/search" class="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">Перейти к поиску</a>
+      </div>
+    </div>
   {% else %}
-    <p class="muted">Товаров в корзине: <b>{{ cart_count }}</b></p>
-    <div class="card">
-      {% for i in items %}
-        <div style="display:flex; justify-content:space-between;">
-          <div>
-            <b>{{ i.title }}</b><br>
-            <span class="muted">Цена: {{ i.price }}</span><br>
-            <span class="muted">Количество: {{ i.quantity }}</span>
-          </div>
-          <div>
-            <b>{{ i.line_total }}</b>
-          </div>
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="space-y-4">
+          {% for i in items %}
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="font-semibold">{{ i.title }}</div>
+                <div class="mt-1 text-sm text-slate-600">Цена: {{ i.price }} ₽</div>
+                <div class="text-sm text-slate-600">Количество: {{ i.quantity }}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm text-slate-500">Сумма</div>
+                <div class="font-semibold">{{ i.line_total }} ₽</div>
+              </div>
+            </div>
+            {% if not loop.last %}
+              <div class="border-t border-slate-100"></div>
+            {% endif %}
+          {% endfor %}
         </div>
-        <hr>
-      {% endfor %}
-      <div style="display:flex; justify-content:space-between;">
-        <div class="muted">Итого</div>
-        <div><b>{{ total }}</b></div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm h-fit">
+        <div class="text-sm text-slate-500">Итого</div>
+        <div class="mt-1 text-2xl font-semibold">{{ total }} ₽</div>
+        <a href="/checkout" class="mt-4 inline-flex w-full justify-center rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+          Оформить заказ
+        </a>
+        <a href="/search" class="mt-2 inline-flex w-full justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+          Продолжить покупки
+        </a>
       </div>
     </div>
   {% endif %}
-
-  {% if items and items|length > 0 %}
-    <p><a href="/checkout">Перейти к оформлению заказа</a></p>
-  {% endif %}
-
-  <p><a href="/search">Вернуться к поиску</a></p>
 {% endblock %}
 

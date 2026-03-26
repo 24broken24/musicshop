@@ -4,38 +4,48 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}MusicShop{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 16px; }
-    header { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-    .muted { color: #666; }
-    .card { border: 1px solid #ddd; padding: 12px; margin: 10px 0; border-radius: 8px; }
-    input, select, button { padding: 8px; margin: 6px 0; }
-    button { cursor: pointer; }
-    nav a { margin-right: 8px; }
-    .error { color: #b00020; }
+    /* small defaults so it looks good immediately */
+    html { color-scheme: light; }
   </style>
 </head>
-<body>
-<header>
-  <nav>
-    <a href="/search">Поиск</a>
-    {% if user is defined and user %}
-      {% if user.role == 'admin' %}
-        <a href="/admin/vinyls/new">Админ: добавить пластинку</a>
-      {% endif %}
-      <a href="/cart">Корзина ({{ cart_count }})</a>
-      <a href="/logout">Выйти</a>
-    {% else %}
-      <a href="/login">Войти</a>
-      <a href="/register">Регистрация</a>
-      <span class="muted">Корзина ({{ cart_count }})</span>
-    {% endif %}
-  </nav>
-</header>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="/search" class="font-semibold tracking-tight text-slate-900">
+          MusicShop
+        </a>
+        <span class="hidden sm:inline text-sm text-slate-500">Виниловые пластинки</span>
+      </div>
 
-<main>
-  {% block content %}{% endblock %}
-</main>
+      <nav class="flex items-center gap-2 sm:gap-3 text-sm">
+        <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/search">Поиск</a>
+
+        {% if user is defined and user %}
+          {% if user.role == 'admin' %}
+            <a class="px-3 py-2 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+               href="/admin/vinyls/new">Админ</a>
+          {% endif %}
+          <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/cart">
+            Корзина <span class="ml-1 rounded-full bg-slate-900 text-white px-2 py-0.5 text-xs">{{ cart_count }}</span>
+          </a>
+          <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/logout">Выйти</a>
+        {% else %}
+          <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/login">Войти</a>
+          <a class="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800" href="/register">Регистрация</a>
+          <span class="px-3 py-2 rounded-lg text-slate-500">
+            Корзина <span class="ml-1 rounded-full bg-slate-200 px-2 py-0.5 text-xs">{{ cart_count }}</span>
+          </span>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    {% block content %}{% endblock %}
+  </main>
 </body>
 </html>
 

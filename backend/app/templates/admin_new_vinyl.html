@@ -3,34 +3,58 @@
 {% block title %}Добавить пластинку{% endblock %}
 
 {% block content %}
-  <h1>Добавить пластинку (админ)</h1>
+  <div class="mx-auto max-w-2xl">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h1 class="text-2xl font-semibold tracking-tight">Добавить пластинку</h1>
+      <p class="mt-1 text-sm text-slate-500">Админ‑панель: создание карточки товара.</p>
 
-  {% if error %}
-    <p class="error">{{ error }}</p>
-  {% endif %}
+      {% if error %}
+        <div class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {{ error }}
+        </div>
+      {% endif %}
 
-  <form method="post" action="/admin/vinyls/new">
-    <div>
-      <label>Название:</label><br>
-      <input name="title" required>
+      <form method="post" action="/admin/vinyls/new" class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium text-slate-700">Название</label>
+          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                 name="title" required placeholder="например, Abbey Road">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-slate-700">Автор (исполнитель)</label>
+          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                 name="artist_name" required placeholder="The Beatles">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-slate-700">Жанры (через запятую)</label>
+          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                 name="genres" placeholder="Rock, Jazz">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-slate-700">Цена</label>
+          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                 type="number" step="0.01" name="price" required placeholder="1999">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-medium text-slate-700">Описание</label>
+          <textarea class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                    name="description" rows="3" cols="40" placeholder="Короткое описание..."></textarea>
+        </div>
+
+        <div class="md:col-span-2 flex gap-2">
+          <button type="submit" class="rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+            Добавить
+          </button>
+          <a href="/search" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+            Назад
+          </a>
+        </div>
+      </form>
     </div>
-    <div>
-      <label>Автор (исполнитель):</label><br>
-      <input name="artist_name" required>
-    </div>
-    <div>
-      <label>Жанры (через запятую):</label><br>
-      <input name="genres" placeholder="Rock, Jazz">
-    </div>
-    <div>
-      <label>Цена:</label><br>
-      <input type="number" step="0.01" name="price" required>
-    </div>
-    <div>
-      <label>Описание:</label><br>
-      <textarea name="description" rows="3" cols="40"></textarea>
-    </div>
-    <button type="submit">Добавить</button>
-  </form>
+  </div>
 {% endblock %}
 

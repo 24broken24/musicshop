@@ -3,34 +3,77 @@
 {% block title %}Оформление заказа{% endblock %}
 
 {% block content %}
-  <h1>Оформление заказа</h1>
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight">Оформление заказа</h1>
+      <p class="mt-1 text-sm text-slate-500">Введите адрес доставки и выберите способ оплаты.</p>
+    </div>
+    <div class="text-sm text-slate-500">
+      Товаров: <span class="font-medium text-slate-900">{{ cart_count }}</span>
+    </div>
+  </div>
 
   {% if error %}
-    <p class="error">{{ error }}</p>
+    <div class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+      {{ error }}
+    </div>
   {% endif %}
 
   {% if not items or items|length == 0 %}
-    <p>Корзина пуста. Оформлять нечего.</p>
-    <p><a href="/search">Перейти к поиску</a></p>
-  {% else %}
-    <div class="card">
-      <p class="muted">Товаров: <b>{{ cart_count }}</b>, сумма: <b>{{ total }}</b></p>
+    <div class="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
+      <div class="text-lg font-medium">Корзина пуста</div>
+      <div class="mt-1 text-sm">Оформлять нечего. Добавьте пластинки в корзину.</div>
+      <div class="mt-4">
+        <a href="/search" class="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">Перейти к поиску</a>
+      </div>
     </div>
+  {% else %}
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="text-sm text-slate-500">Состав заказа</div>
+        <div class="mt-3 space-y-3">
+          {% for i in items %}
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="font-semibold">{{ i.title }}</div>
+                <div class="text-sm text-slate-600">Количество: {{ i.quantity }}</div>
+              </div>
+              <div class="text-right font-semibold">{{ i.line_total }} ₽</div>
+            </div>
+            {% if not loop.last %}
+              <div class="border-t border-slate-100"></div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
 
-    <form method="post" action="/checkout">
-      <div>
-        <label>Адрес доставки:</label><br>
-        <textarea name="delivery_address" rows="3" cols="40" required></textarea>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm h-fit">
+        <div class="text-sm text-slate-500">Итого</div>
+        <div class="mt-1 text-2xl font-semibold">{{ total }} ₽</div>
+
+        <form method="post" action="/checkout" class="mt-4 space-y-3">
+          <div>
+            <label class="text-sm font-medium text-slate-700">Адрес доставки</label>
+            <textarea class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                      name="delivery_address" rows="3" required></textarea>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-slate-700">Способ оплаты</label>
+            <select class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                    name="payment_method" required>
+              <option value="card">Оплата картой</option>
+              <option value="cash">Наличными при получении</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+            Оформить заказ
+          </button>
+          <a href="/cart" class="inline-flex w-full justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+            Назад в корзину
+          </a>
+        </form>
       </div>
-      <div>
-        <label>Способ оплаты:</label><br>
-        <select name="payment_method" required>
-          <option value="card">Оплата картой</option>
-          <option value="cash">Наличными при получении</option>
-        </select>
-      </div>
-      <button type="submit">Оформить заказ</button>
-    </form>
+    </div>
   {% endif %}
 {% endblock %}
 

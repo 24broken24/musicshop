@@ -3,24 +3,46 @@
 {% block title %}{{ vinyl.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ vinyl.title }}</h1>
-  <p class="muted">Исполнитель: {{ vinyl.artist_name }}</p>
-  <p>Цена: {{ vinyl.price }}</p>
-  <p class="muted">Жанры: {{ vinyl.genres if vinyl.genres else '-' }}</p>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      <h1 class="text-3xl font-semibold tracking-tight">{{ vinyl.title }}</h1>
+      <div class="mt-2 text-sm text-slate-600">
+        Исполнитель: <span class="font-medium text-slate-900">{{ vinyl.artist_name }}</span>
+      </div>
+      <div class="mt-1 text-sm text-slate-600">
+        Жанры: {{ vinyl.genres if vinyl.genres else '-' }}
+      </div>
 
-  {% if vinyl.description %}
-    <p>{{ vinyl.description }}</p>
-  {% endif %}
+      {% if vinyl.description %}
+        <p class="mt-4 text-slate-700">{{ vinyl.description }}</p>
+      {% endif %}
+    </div>
 
-  {% if vinyl.cover_url %}
-    <p><img src="{{ vinyl.cover_url }}" alt="cover" style="max-width: 260px; border-radius: 8px;"></p>
-  {% endif %}
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm h-fit">
+      {% if vinyl.cover_url %}
+        <img src="{{ vinyl.cover_url }}" alt="cover" class="w-full rounded-xl border border-slate-100">
+      {% else %}
+        <div class="w-full aspect-square rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 text-sm">
+          Нет обложки
+        </div>
+      {% endif %}
 
-  <form method="post" action="/cart/add">
-    <input type="hidden" name="vinyl_id" value="{{ vinyl.id }}">
-    <button type="submit">Добавить в корзину</button>
-  </form>
+      <div class="mt-4">
+        <div class="text-sm text-slate-500">Цена</div>
+        <div class="text-2xl font-semibold">{{ vinyl.price }} ₽</div>
+      </div>
 
-  <p><a href="/search">Назад к поиску</a></p>
+      <form method="post" action="/cart/add" class="mt-4">
+        <input type="hidden" name="vinyl_id" value="{{ vinyl.id }}">
+        <button type="submit" class="w-full rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+          Добавить в корзину
+        </button>
+      </form>
+
+      <a href="/search" class="mt-2 inline-flex w-full justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+        Назад к поиску
+      </a>
+    </div>
+  </div>
 {% endblock %}
 
