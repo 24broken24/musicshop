@@ -20,6 +20,9 @@
   <nav>
     <a href="/search">Поиск</a>
     {% if user is defined and user %}
+      {% if user.role == 'admin' %}
+        <a href="/admin/vinyls/new">Админ: добавить пластинку</a>
+      {% endif %}
       <a href="/cart">Корзина ({{ cart_count }})</a>
       <a href="/logout">Выйти</a>
     {% else %}
