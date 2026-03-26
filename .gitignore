@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# Env (secrets)
+.env
+**/.env
+*.env
+
+# Editors
+.idea/
+
+# Office artifacts (if present in root)
+*.docx
+*.pdf
+~$*
+

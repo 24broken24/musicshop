@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Поиск пластинок{% endblock %}
+
+{% block content %}
+  <h1>Поиск пластинок</h1>
+
+  <form method="get" action="/search">
+    <div>
+      <label>Название:</label><br>
+      <input name="title" value="{{ filters.title }}">
+    </div>
+    <div>
+      <label>Автор (исполнитель):</label><br>
+      <input name="author" value="{{ filters.author }}">
+    </div>
+    <div>
+      <label>Жанр:</label><br>
+      <input name="genre" value="{{ filters.genre }}">
+    </div>
+    <div>
+      <label>Цена от:</label><br>
+      <input type="number" step="0.01" name="price_min" value="{{ filters.price_min }}">
+    </div>
+    <div>
+      <label>Цена до:</label><br>
+      <input type="number" step="0.01" name="price_max" value="{{ filters.price_max }}">
+    </div>
+    <button type="submit">Найти</button>
+  </form>
+
+  <hr>
+
+  {% if results and results|length > 0 %}
+    <h2>Результаты</h2>
+    {% for r in results %}
+      <div class="card">
+        <div><b>{{ r.title }}</b></div>
+        <div class="muted">Исполнитель: {{ r.artist_name }}</div>
+        <div>Цена: {{ r.price }}</div>
+        <div class="muted">Жанры: {{ r.genres if r.genres else '-' }}</div>
+
+        <div style="margin-top: 8px;">
+          <form method="post" action="/cart/add">
+            <input type="hidden" name="vinyl_id" value="{{ r.id }}">
+            <button type="submit">Добавить в корзину</button>
+          </form>
+          <div>
+            <a href="/vinyl/{{ r.id }}">Подробнее</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Пока ничего не найдено. Уточните фильтры.</p>
+  {% endif %}
+
+{% endblock %}
+

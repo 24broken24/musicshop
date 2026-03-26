@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ vinyl.title }}{% endblock %}
+
+{% block content %}
+  <h1>{{ vinyl.title }}</h1>
+  <p class="muted">Исполнитель: {{ vinyl.artist_name }}</p>
+  <p>Цена: {{ vinyl.price }}</p>
+  <p class="muted">Жанры: {{ vinyl.genres if vinyl.genres else '-' }}</p>
+
+  {% if vinyl.description %}
+    <p>{{ vinyl.description }}</p>
+  {% endif %}
+
+  {% if vinyl.cover_url %}
+    <p><img src="{{ vinyl.cover_url }}" alt="cover" style="max-width: 260px; border-radius: 8px;"></p>
+  {% endif %}
+
+  <form method="post" action="/cart/add">
+    <input type="hidden" name="vinyl_id" value="{{ vinyl.id }}">
+    <button type="submit">Добавить в корзину</button>
+  </form>
+
+  <p><a href="/search">Назад к поиску</a></p>
+{% endblock %}
+

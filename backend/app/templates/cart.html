@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+  <h1>Корзина</h1>
+
+  {% if not items or items|length == 0 %}
+    <p>Корзина пустая.</p>
+  {% else %}
+    <p class="muted">Товаров в корзине: <b>{{ cart_count }}</b></p>
+    <div class="card">
+      {% for i in items %}
+        <div style="display:flex; justify-content:space-between;">
+          <div>
+            <b>{{ i.title }}</b><br>
+            <span class="muted">Цена: {{ i.price }}</span><br>
+            <span class="muted">Количество: {{ i.quantity }}</span>
+          </div>
+          <div>
+            <b>{{ i.line_total }}</b>
+          </div>
+        </div>
+        <hr>
+      {% endfor %}
+      <div style="display:flex; justify-content:space-between;">
+        <div class="muted">Итого</div>
+        <div><b>{{ total }}</b></div>
+      </div>
+    </div>
+  {% endif %}
+
+  <p><a href="/search">Вернуться к поиску</a></p>
+{% endblock %}
+
