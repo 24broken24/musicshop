@@ -6,50 +6,50 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-start justify-between gap-4 flex-wrap">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight">Поиск пластинок</h1>
-        <p class="mt-1 text-sm text-slate-500">Фильтрация по названию, исполнителю, жанру и цене.</p>
+        <h1 class="text-3xl font-semibold tracking-tight">Поиск пластинок</h1>
+        <p class="mt-1 text-sm text-[color:var(--txt1)]">Фильтрация по названию, исполнителю, жанру и цене.</p>
       </div>
-      <div class="text-sm text-slate-500">
+      <div class="text-sm text-[color:var(--txt2)]">
         {% if results and results|length > 0 %}
-          Найдено: <span class="font-medium text-slate-900">{{ results|length }}</span>
+          Найдено: <span class="font-medium text-white">{{ results|length }}</span>
         {% endif %}
       </div>
     </div>
 
-    <form method="get" action="/search" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <form method="get" action="/search" class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur neon">
       <div class="grid grid-cols-1 md:grid-cols-6 gap-3">
         <div class="md:col-span-2">
-          <label class="text-sm font-medium text-slate-700">Название</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Название</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  name="title" value="{{ filters.title }}" placeholder="например, Abbey Road">
         </div>
         <div class="md:col-span-2">
-          <label class="text-sm font-medium text-slate-700">Автор (исполнитель)</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Автор (исполнитель)</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  name="author" value="{{ filters.author }}" placeholder="например, Pink Floyd">
         </div>
         <div class="md:col-span-2">
-          <label class="text-sm font-medium text-slate-700">Жанр</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Жанр</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  name="genre" value="{{ filters.genre }}" placeholder="Rock, Jazz">
         </div>
         <div class="md:col-span-1">
-          <label class="text-sm font-medium text-slate-700">Цена от</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Цена от</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  type="number" step="0.01" name="price_min" value="{{ filters.price_min }}" placeholder="0">
         </div>
         <div class="md:col-span-1">
-          <label class="text-sm font-medium text-slate-700">Цена до</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Цена до</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  type="number" step="0.01" name="price_max" value="{{ filters.price_max }}" placeholder="9999">
         </div>
         <div class="md:col-span-4 flex items-end gap-2">
           <button type="submit"
-                  class="w-full md:w-auto rounded-xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">
+                  class="w-full md:w-auto rounded-xl px-4 py-2 text-white bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 hover:opacity-95 neon">
             Найти
           </button>
           <a href="/search"
-             class="w-full md:w-auto rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50 text-center">
+             class="w-full md:w-auto rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-[color:var(--txt1)] hover:bg-white/10 text-center">
             Сбросить
           </a>
         </div>
@@ -59,16 +59,26 @@
     {% if results and results|length > 0 %}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         {% for r in results %}
-          <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div class="rounded-2xl border border-white/10 bg-[color:var(--card)] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
             <div class="flex items-start justify-between gap-3">
               <div>
-                <div class="text-lg font-semibold leading-snug">{{ r.title }}</div>
-                <div class="mt-1 text-sm text-slate-600">Исполнитель: <span class="font-medium text-slate-900">{{ r.artist_name }}</span></div>
-                <div class="mt-1 text-sm text-slate-600">Жанры: {{ r.genres if r.genres else '-' }}</div>
+                <div class="text-lg font-semibold leading-snug text-[color:var(--oncard)]">{{ r.title }}</div>
+                <div class="mt-1 text-sm text-[color:var(--mutedcard)]">Исполнитель: <span class="font-medium text-[color:var(--oncard)]">{{ r.artist_name }}</span></div>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  {% if r.genres %}
+                    {% for g in r.genres.split(',') %}
+                      <span class="text-xs px-2 py-1 rounded-full bg-white/70 border border-slate-200 text-[color:var(--oncard)]">
+                        {{ g.strip() }}
+                      </span>
+                    {% endfor %}
+                  {% else %}
+                    <span class="text-xs text-[color:var(--mutedcard)]">Жанры: -</span>
+                  {% endif %}
+                </div>
               </div>
               <div class="text-right">
-                <div class="text-lg font-semibold">{{ r.price }}</div>
-                <div class="text-xs text-slate-500">₽</div>
+                <div class="text-xl font-semibold text-[color:var(--oncard)]">{{ r.price }} ₽</div>
+                <div class="text-xs text-[color:var(--mutedcard)]">цена</div>
               </div>
             </div>
 
@@ -76,12 +86,12 @@
               <form method="post" action="/cart/add" class="m-0">
                 <input type="hidden" name="vinyl_id" value="{{ r.id }}">
                 <button type="submit"
-                        class="rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+                        class="rounded-xl px-4 py-2 text-white bg-gradient-to-r from-violet-600 via-cyan-500 to-pink-500 hover:opacity-95 neon">
                   В корзину
                 </button>
               </form>
               <a href="/vinyl/{{ r.id }}"
-                 class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+                 class="rounded-xl border border-slate-200 bg-white/70 px-4 py-2 text-[color:var(--oncard)] hover:bg-white">
                 Подробнее
               </a>
             </div>
@@ -89,9 +99,9 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
-        <div class="text-lg font-medium">Ничего не найдено</div>
-        <div class="mt-1 text-sm">Уточните фильтры или сбросьте поиск.</div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-[color:var(--txt1)] neon">
+        <div class="text-lg font-medium text-white">Ничего не найдено</div>
+        <div class="mt-1 text-sm text-[color:var(--txt2)]">Уточните фильтры или сбросьте поиск.</div>
       </div>
     {% endif %}
   </div>

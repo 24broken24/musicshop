@@ -4,52 +4,52 @@
 
 {% block content %}
   <div class="mx-auto max-w-2xl">
-    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur neon">
       <h1 class="text-2xl font-semibold tracking-tight">Добавить пластинку</h1>
-      <p class="mt-1 text-sm text-slate-500">Админ‑панель: создание карточки товара.</p>
+      <p class="mt-1 text-sm text-[color:var(--txt2)]">Админ‑панель: создание карточки товара.</p>
 
       {% if error %}
-        <div class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div class="mt-4 rounded-xl border border-pink-400/30 bg-pink-500/10 px-4 py-3 text-sm text-pink-200 neon-pink">
           {{ error }}
         </div>
       {% endif %}
 
       <form method="post" action="/admin/vinyls/new" class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="md:col-span-2">
-          <label class="text-sm font-medium text-slate-700">Название</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Название</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  name="title" required placeholder="например, Abbey Road">
         </div>
 
         <div>
-          <label class="text-sm font-medium text-slate-700">Автор (исполнитель)</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Автор (исполнитель)</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  name="artist_name" required placeholder="The Beatles">
         </div>
 
         <div>
-          <label class="text-sm font-medium text-slate-700">Жанры (через запятую)</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Жанры (через запятую)</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  name="genres" placeholder="Rock, Jazz">
         </div>
 
         <div>
-          <label class="text-sm font-medium text-slate-700">Цена</label>
-          <input class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Цена</label>
+          <input class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                  type="number" step="0.01" name="price" required placeholder="1999">
         </div>
 
         <div class="md:col-span-2">
-          <label class="text-sm font-medium text-slate-700">Описание</label>
-          <textarea class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+          <label class="text-sm font-medium text-[color:var(--txt1)]">Описание</label>
+          <textarea class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-cyan-300/40 neon-cyan"
                     name="description" rows="3" cols="40" placeholder="Короткое описание..."></textarea>
         </div>
 
         <div class="md:col-span-2 flex gap-2">
-          <button type="submit" class="rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+          <button type="submit" class="rounded-xl px-4 py-2 text-white bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 hover:opacity-95 neon">
             Добавить
           </button>
-          <a href="/search" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+          <a href="/search" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-[color:var(--txt1)] hover:bg-white/10">
             Назад
           </a>
         </div>

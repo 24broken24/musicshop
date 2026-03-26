@@ -4,15 +4,15 @@
 
 {% block content %}
   <div class="mx-auto max-w-lg">
-    <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm text-center">
-      <div class="mx-auto h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">
-        OK
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur neon text-center">
+      <div class="mx-auto h-12 w-12 rounded-full bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 flex items-center justify-center text-white font-bold neon">
+        ✓
       </div>
       <h1 class="mt-4 text-2xl font-semibold tracking-tight">Заказ оформлен</h1>
-      <p class="mt-2 text-slate-600">Заказ № <span class="font-semibold text-slate-900">{{ order_id }}</span> успешно создан.</p>
+      <p class="mt-2 text-[color:var(--txt1)]">Заказ № <span class="font-semibold text-white">{{ order_id }}</span> успешно создан.</p>
       <div class="mt-6 flex flex-col sm:flex-row gap-2 justify-center">
-        <a href="/search" class="rounded-xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">Вернуться к каталогу</a>
-        <a href="/cart" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">В корзину</a>
+        <a href="/search" class="rounded-xl px-4 py-2 text-white bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 hover:opacity-95 neon">Вернуться к каталогу</a>
+        <a href="/cart" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-[color:var(--txt1)] hover:bg-white/10">В корзину</a>
       </div>
     </div>
   </div>

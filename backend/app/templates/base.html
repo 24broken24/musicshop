@@ -6,37 +6,89 @@
   <title>{% block title %}MusicShop{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* small defaults so it looks good immediately */
-    html { color-scheme: light; }
+    /* Atmosphere: vinyl night club / neon */
+    :root{
+      --bg0:#070812;
+      --bg1:#0B0D1E;
+      --txt0:#EAEAFF;
+      --txt1:rgba(234,234,255,.78);
+      --txt2:rgba(234,234,255,.55);
+
+      --card:#F5F6FF;
+      --card2:#ECEFFF;
+      --oncard:#10122A;
+      --mutedcard:rgba(16,18,42,.62);
+
+      --violet:#8B5CF6;
+      --cyan:#22D3EE;
+      --pink:#FB7185;
+    }
+    html { color-scheme: dark; background: var(--bg1); }
+    .bg-vinyl {
+      background:
+        radial-gradient(900px circle at 20% 10%, rgba(139,92,246,0.25), transparent 55%),
+        radial-gradient(700px circle at 80% 15%, rgba(34,211,238,0.18), transparent 60%),
+        radial-gradient(800px circle at 60% 90%, rgba(251,113,133,0.14), transparent 55%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg0) 100%);
+    }
+    .grooves {
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(234,234,255,0.06) 0,
+        rgba(234,234,255,0.06) 1px,
+        transparent 1px,
+        transparent 12px
+      );
+    }
+    .neon {
+      box-shadow: 0 0 0 1px rgba(139,92,246,0.35), 0 0 28px rgba(139,92,246,0.22);
+    }
+    .neon-cyan {
+      box-shadow: 0 0 0 1px rgba(34,211,238,0.30), 0 0 26px rgba(34,211,238,0.20);
+    }
+    .neon-pink {
+      box-shadow: 0 0 0 1px rgba(251,113,133,0.30), 0 0 26px rgba(251,113,133,0.20);
+    }
   </style>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900">
-  <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur">
+<body class="min-h-screen bg-vinyl text-[color:var(--txt0)]">
+  <header class="sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur">
     <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <a href="/search" class="font-semibold tracking-tight text-slate-900">
-          MusicShop
+        <a href="/search" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 neon">
+            <!-- vinyl icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" stroke="rgba(234,234,255,.8)" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="4" stroke="rgba(34,211,238,.9)" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="1.3" fill="rgba(251,113,133,.95)"/>
+            </svg>
+          </span>
+          <span>MusicShop</span>
         </a>
-        <span class="hidden sm:inline text-sm text-slate-500">Виниловые пластинки</span>
+        <span class="hidden sm:inline text-sm text-[color:var(--txt2)] grooves px-3 py-1 rounded-xl">
+          Виниловые пластинки
+        </span>
       </div>
 
       <nav class="flex items-center gap-2 sm:gap-3 text-sm">
-        <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/search">Поиск</a>
+        <a class="px-3 py-2 rounded-xl hover:bg-white/10" href="/search">Поиск</a>
 
         {% if user is defined and user %}
           {% if user.role == 'admin' %}
-            <a class="px-3 py-2 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+            <a class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 neon-cyan"
                href="/admin/vinyls/new">Админ</a>
           {% endif %}
-          <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/cart">
-            Корзина <span class="ml-1 rounded-full bg-slate-900 text-white px-2 py-0.5 text-xs">{{ cart_count }}</span>
+          <a class="px-3 py-2 rounded-xl hover:bg-white/10" href="/cart">
+            Корзина <span class="ml-1 rounded-full bg-white/10 px-2 py-0.5 text-xs neon-pink">{{ cart_count }}</span>
           </a>
-          <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/logout">Выйти</a>
+          <a class="px-3 py-2 rounded-xl hover:bg-white/10" href="/logout">Выйти</a>
         {% else %}
-          <a class="px-3 py-2 rounded-lg hover:bg-slate-100" href="/login">Войти</a>
-          <a class="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800" href="/register">Регистрация</a>
-          <span class="px-3 py-2 rounded-lg text-slate-500">
-            Корзина <span class="ml-1 rounded-full bg-slate-200 px-2 py-0.5 text-xs">{{ cart_count }}</span>
+          <a class="px-3 py-2 rounded-xl hover:bg-white/10" href="/login">Войти</a>
+          <a class="px-3 py-2 rounded-xl text-white neon bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 hover:opacity-95"
+             href="/register">Регистрация</a>
+          <span class="px-3 py-2 rounded-xl text-[color:var(--txt2)]">
+            Корзина <span class="ml-1 rounded-full bg-white/10 px-2 py-0.5 text-xs">{{ cart_count }}</span>
           </span>
         {% endif %}
       </nav>

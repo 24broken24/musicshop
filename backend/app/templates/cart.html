@@ -6,35 +6,35 @@
   <div class="flex items-start justify-between gap-4 flex-wrap">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight">Корзина</h1>
-      <p class="mt-1 text-sm text-slate-500">Проверьте состав заказа перед оформлением.</p>
+      <p class="mt-1 text-sm text-[color:var(--txt2)]">Проверьте состав заказа перед оформлением.</p>
     </div>
-    <div class="text-sm text-slate-500">
-      Товаров: <span class="font-medium text-slate-900">{{ cart_count }}</span>
+    <div class="text-sm text-[color:var(--txt2)]">
+      Товаров: <span class="font-medium text-white">{{ cart_count }}</span>
     </div>
   </div>
 
   {% if not items or items|length == 0 %}
-    <div class="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
-      <div class="text-lg font-medium">Корзина пустая</div>
-      <div class="mt-1 text-sm">Перейдите к поиску и добавьте пластинки.</div>
+    <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-[color:var(--txt1)] neon">
+      <div class="text-lg font-medium text-white">Корзина пустая</div>
+      <div class="mt-1 text-sm text-[color:var(--txt2)]">Перейдите к поиску и добавьте пластинки.</div>
       <div class="mt-4">
-        <a href="/search" class="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">Перейти к поиску</a>
+        <a href="/search" class="inline-flex rounded-xl px-4 py-2 text-white bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 hover:opacity-95 neon">Перейти к поиску</a>
       </div>
     </div>
   {% else %}
     <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="lg:col-span-2 rounded-2xl border border-white/10 bg-[color:var(--card)] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
         <div class="space-y-4">
           {% for i in items %}
             <div class="flex items-start justify-between gap-3">
               <div>
-                <div class="font-semibold">{{ i.title }}</div>
-                <div class="mt-1 text-sm text-slate-600">Цена: {{ i.price }} ₽</div>
-                <div class="text-sm text-slate-600">Количество: {{ i.quantity }}</div>
+                <div class="font-semibold text-[color:var(--oncard)]">{{ i.title }}</div>
+                <div class="mt-1 text-sm text-[color:var(--mutedcard)]">Цена: <span class="text-[color:var(--oncard)] font-medium">{{ i.price }} ₽</span></div>
+                <div class="text-sm text-[color:var(--mutedcard)]">Количество: <span class="text-[color:var(--oncard)] font-medium">{{ i.quantity }}</span></div>
               </div>
               <div class="text-right">
-                <div class="text-sm text-slate-500">Сумма</div>
-                <div class="font-semibold">{{ i.line_total }} ₽</div>
+                <div class="text-sm text-[color:var(--mutedcard)]">Сумма</div>
+                <div class="font-semibold text-[color:var(--oncard)]">{{ i.line_total }} ₽</div>
               </div>
             </div>
             {% if not loop.last %}
@@ -44,13 +44,13 @@
         </div>
       </div>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm h-fit">
-        <div class="text-sm text-slate-500">Итого</div>
-        <div class="mt-1 text-2xl font-semibold">{{ total }} ₽</div>
-        <a href="/checkout" class="mt-4 inline-flex w-full justify-center rounded-xl bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur neon h-fit">
+        <div class="text-sm text-[color:var(--txt2)]">Итого</div>
+        <div class="mt-1 text-2xl font-semibold text-white">{{ total }} ₽</div>
+        <a href="/checkout" class="mt-4 inline-flex w-full justify-center rounded-xl px-4 py-2 text-white bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-400 hover:opacity-95 neon">
           Оформить заказ
         </a>
-        <a href="/search" class="mt-2 inline-flex w-full justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-700 hover:bg-slate-50">
+        <a href="/search" class="mt-2 inline-flex w-full justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-[color:var(--txt1)] hover:bg-white/10">
           Продолжить покупки
         </a>
       </div>
