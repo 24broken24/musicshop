@@ -67,6 +67,17 @@ def _cart_count_context(request: Request) -> int:
         return 0
     return get_cart_count(user["id"])
 
+def _parse_optional_float(value: Optional[str]) -> Optional[float]:
+    if value is None:
+        return None
+    v = value.strip()
+    if v == "":
+        return None
+    try:
+        return float(v)
+    except ValueError:
+        return None
+
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
@@ -182,10 +193,12 @@ def search_page(
     title: Optional[str] = None,
     author: Optional[str] = None,
     genre: Optional[str] = None,
-    price_min: Optional[float] = None,
-    price_max: Optional[float] = None,
+    price_min: Optional[str] = None,
+    price_max: Optional[str] = None,
 ):
-    results = search_vinyls(title, author, genre, price_min, price_max)
+    price_min_f = _parse_optional_float(price_min)
+    price_max_f = _parse_optional_float(price_max)
+    results = search_vinyls(title, author, genre, price_min_f, price_max_f)
     return templates.TemplateResponse(
         "search.html",
         {
@@ -197,8 +210,8 @@ def search_page(
                 "title": title or "",
                 "author": author or "",
                 "genre": genre or "",
-                "price_min": "" if price_min is None else price_min,
-                "price_max": "" if price_max is None else price_max,
+                "price_min": "" if price_min_f is None else price_min_f,
+                "price_max": "" if price_max_f is None else price_max_f,
             },
         },
     )
